@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Web Map</title>
+
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet"> 
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
+        <link rel="stylesheet" href="http://leaflet.github.io/Leaflet.draw/leaflet.draw.css"/>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+        <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="css/leaflet.css">
+
+        <link rel="stylesheet" type="text/css" href="plugin/leaflet.defaultextent.css">
+        <script src="plugin/leaflet.defaultextent.js"></script>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+        <script src="https://unpkg.com/georaster/dist/georaster.browser.min.js"></script>
+        <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.browser.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js"></script>
+        <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
+        <script src="data/digitasi_A.js"></script>
+        <script src="data/digitasi_B.js"></script>
+        <script src="data/aoi.js"></script>
+        <script src="data/prediksi_A.js"></script>
+        <script src="data/prediksi_B.js"></script>
+        <link rel = "icon" href = "LOGOUGM.png" 
+        type = "image/x-icon">
+        <style>
+        html, body{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #map {
+            width: 100%;
+            height: 85vh;
+            padding: 0;
+            margin: 0;
+        }
+        header{
+	        background-color: #f4f4f2;
+        }
+        .legend p {
+            font-size: 10pt;
+            line-height: 2;
+            margin: 0px;
+        }
+        .legend {
+            padding: 6px 8px;
+            margin: 0px;
+            border-radius: 10px;
+            border: 2px solid #f8edeb;
+            background-clip: padding-box;
+        }
+        @media (max-width: 768px) {
+            #map {
+                height: 90vh;
+            }}
+        #legend-title {
+            font-weight: bold;
+            text-align: center;
+            font-size: 12pt;
+        }
+        </style>
+    </head>
+
+    <body>
+         <!-- Header -->
+         <header class="site-header">
+            <div class="site-identity">
+                <a><img src="icon/icon_webmap.png" alt="Icon Web Map" /></a>
+              <h1><a class="judul"> <b>Web Map</b> <c>Visualisasi Segmentasi Ekstraksi Jalan Foto Udara Sentul</c> 
+                    <br> <c>Deep Learning U-Net</c> </a></h1>
+            </div>  
+          </header>
+        <!-- Web Map -->
+            <div id='map'></div>
+                    <script> 
+                        var map = L.map('map', {
+                            center: [-6.572712795521886, 106.8764568400041],
+                            zoom: 14,
+                        });
+                        //Basemap//
+                        var osm_mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	                    maxZoom: 25,
+	                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        });
+            
+                        var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                        });
+                        var carto = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>&copy; <a href="http://cartodb.com/attributions">CartoDB</a>', 
+                        subdomains: 'abcd', 
+                        maxZoom: '25'
+                        });
+                        var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 25,
+                        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                        });
+                        var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+                        maxZoom: 25,
+                        subdomains:['mt0','mt1','mt2','mt3']
+                        }).addTo(map);;
+
+                        var baseMaps = {
+                            "Google" : googleSat,
+                            "Satellite": esri,
+                            "OSM" : osm_mapnik,
+                            "Dark": carto,
+                            "Topo" : OpenTopoMap                   
+                        }; 
+                        // AOI //
+                        var aoi = L.geoJson(aoi, {
+                        style: function(feature) {
+                            switch (feature.id) {
+                                case 1:
+                                default:
+                                    return {
+                                        color: "#ebcc78", // Warna default
+                                        weight: 3,
+                                        fill: false      // Tidak ada warna isi
+                                    };
+                            }
+                        }
+                    });
+                    aoi.addTo(map);
+
+                        //Poligon Training Data Sentul 1209-1444A//
+                        var training_A = L.geoJson(digitasi_A, {
+                        style: function(feature) {
+                            switch (feature.id) {
+                            case 1 :
+                            return { color: "#c43c39", weight: 2, fillOpacity: 0.7 };
+                            }
+                        },});
+                        //Poligon Training Data Sentul 1209-1436B//
+                        var training_B = L.geoJson(digitasi_B, {
+                        style: function(feature) {
+                            switch (feature.id) {
+                            case 1 :
+                            return { color: "#c43c39", weight: 2, fillOpacity: 0.7 };
+                            }
+                        },});
+                        //Poligon Prediksi Data Sentul 1209-1444A//
+                        var prediksi_A = L.geoJson(prediksi_A, {
+                        style: function(feature) {
+                            switch (feature.type) {
+                            case "Feature" :
+                            return { color: "#c43c39", weight: 2, fillOpacity: 0.7 };
+                            }
+                        },});
+                        //Poligon Prediksi Data Sentul 1209-1436B//
+                        var prediksi_B = L.geoJson(prediksi_B, {
+                        style: function(feature) {
+                            switch (feature.type) {
+                            case "Feature" :
+                            return { color: "#c43c39", weight: 2, fillOpacity: 0.7 };
+                            }
+                        },});
+                        var overlayMaps = {
+                        "Ground Truth NLP A" : training_A,
+                        "Ground Truth NLP B" : training_B,
+                        "Prediksi NLP A" : prediksi_A,
+                        "Prediksi NLP B" : prediksi_B,
+                        };
+
+                        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+                        var extent = L.control.defaultExtent().addTo(map);
+                        var geocoder = L.Control.geocoder({
+                        position: 'topleft'
+                        }).addTo(map);
+            
+                        var scale = L.control.scale().addTo(map);
+                        /*Legend specific*/
+                        var legend = L.control({ position: "bottomright" });
+                        legend.onAdd = function(map) {
+                        var div = L.DomUtil.create("div", "legend");
+                        div.innerHTML = '<p><div id="legend-title">Legenda</div></div><i style="background: transparent; border: 3px solid #ebcc78;margin-top:3px; margin-left:1px;"></i> Area of Interest </p></div><i style="background: #c43c39;margin-top:3px; margin-left:1px"></i> Hasil Prediksi Model</p></div><i style="background: #173d6e;margin-top:3px; margin-left:1px"></i>Ground Truth</p>';
+                        return div;
+                        };
+                        legend.addTo(map);
+                        </script>
+    </body>
+</html>
+<!---------Labelgun--------->
+<script src="https://unpkg.com/rbush@2.0.2/rbush.min.js"></script>
+<script src="https://unpkg.com/labelgun@6.1.0/lib/labelgun.min.js"></script>
