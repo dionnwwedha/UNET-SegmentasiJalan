@@ -196,7 +196,7 @@
                         var legend = L.control({ position: "bottomright" });
                         legend.onAdd = function(map) {
                         var div = L.DomUtil.create("div", "legend");
-                        div.innerHTML = '<p><div id="legend-title">Legenda</div></div><i style="background: transparent; border: 3px solid #ebcc78;margin-top:3px; margin-left:1px;"></i> Area of Interest </p></div><i style="background: #c43c39;margin-top:3px; margin-left:1px"></i> Hasil Prediksi Model</p></div><i style="background: #173d6e;margin-top:3px; margin-left:1px"></i>Ground Truth</p>';
+                        div.innerHTML = '<p><div id="legend-title">Legenda</div></div><i style="background: transparent; border: 3px solid #ebcc78;margin-top:3px; margin-left:1px;"></i> Area of Interest </p></div><i style="background: #c43c39;margin-top:3px; margin-left:1px"></i> Hasil Prediksi Model</p></div><i style="background: #173d6e;margin-top:3px; margin-left:1px"></i>Training Data</p>';
                         return div;
                         };
                         legend.addTo(map);
